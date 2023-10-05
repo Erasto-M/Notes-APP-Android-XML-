@@ -35,13 +35,14 @@ public class notedetails extends AppCompatActivity {
         if(notecontent == null || notecontent.isEmpty()){
             contenteditText.setError("Content is required");
         }
-        note Note = new note();
+        Note Note = new Note();
         Note.setTitle(notetitle);
         Note.setContent(notecontent);
         Note.setTimestamp(new Timestamp(new Date().getTime()));
         savenotetofirebase(Note);
+        finish();
     }
-    void savenotetofirebase(note Note){
+    void savenotetofirebase(Note Note){
         DocumentReference documentReference;
         documentReference = utility.getcollectionreference().document();
         documentReference.set(Note).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -50,6 +51,7 @@ public class notedetails extends AppCompatActivity {
                 if(task.isSuccessful()){
                     //note is added successfully
                     utility.showToast(notedetails.this,"Notes added succesfully");
+
                 } else{
                     // notes not added
                     utility.showToast(notedetails.this,
