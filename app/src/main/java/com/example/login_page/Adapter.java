@@ -1,6 +1,8 @@
 package com.example.login_page;
 
 import android.content.Context;
+import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -19,14 +21,27 @@ public class Adapter extends FirestoreRecyclerAdapter<Note,Adapter.NoteHolder> {
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull NoteHolder holder, int position, @NonNull Note model) {
-
+    protected void onBindViewHolder(
+            @NonNull NoteHolder holder, int position, @NonNull Note note) {
+        holder.titleTextView.setText(note.title);
+        holder.contentTextView.setText(note.content);
+        holder.timestampTextView.setText(utility.timestampToString(note.timestamp));
+        holder.itemView.setOnClickListener((v)->{
+            Intent intent = new Intent(context,NoteAdapter.class);
+            intent.putExtra("title",note.title);
+            intent.putExtra("content",note.content);
+            String docId=this.getSnapshots().getSnapshot(position).getId();
+            intent.putExtra("docid",docId);
+            context.startActivity(intent);
+        });
     }
 
     @NonNull
     @Override
     public NoteHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        View view = LayoutInflater.from(parent.getContext()).
+                inflate(R.layout.recycler_note_item,parent,false);
+        return new NoteHolder(view);
     }
 
     class NoteHolder extends RecyclerView.ViewHolder {
